@@ -2,19 +2,16 @@ package com.amy.baseviewdemo
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.amy.baseviewdemo.drawer.DemoView
 import com.drakeet.multitype.MultiTypeAdapter
 import com.drakeet.multitype.ViewDelegate
 
@@ -31,6 +28,9 @@ class MainActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val items = ArrayList<String>()
+        for ( index in 1..10) {
+            items.add(index.toString())
+        }
         val adapter = MultiTypeAdapter(items)
         adapter.register(String::class, StringViewDelegate())
         recyclerView.adapter = adapter
@@ -59,19 +59,21 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    class StringViewDelegate : ViewDelegate<String, TextView>() {
+    class StringViewDelegate : ViewDelegate<String, DemoView>() {
 
-        override fun onCreateView(context: Context): TextView {
-            return TextView(context).apply {
-                setTextColor(Color.BLACK)
-                gravity = Gravity.CENTER
-                updatePadding(left = 24.dp, right = 24.dp)
-                layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.MATCH_PARENT)
-            }
+        override fun onCreateView(context: Context): DemoView {
+            return DemoView(context)
         }
 
-        override fun onBindView(view: TextView, item: String) {
-            view.text = item
+        override fun onBindView(holder: Holder<DemoView>, view: DemoView, item: String) {
+            super.onBindView(holder, view, item)
+            view.apply {
+                leftText.text = "item"+holder.adapterPosition
+            }
+        }
+        override fun onBindView(view: DemoView, item: String) {
+
+
         }
     }
 
