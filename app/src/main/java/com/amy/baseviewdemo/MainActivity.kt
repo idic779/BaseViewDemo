@@ -68,7 +68,9 @@ class MainActivity : AppCompatActivity() {
         override fun onBindView(holder: Holder<DemoView>, view: DemoView, item: String) {
             super.onBindView(holder, view, item)
             view.apply {
-                leftText.text = "item"+holder.adapterPosition
+                val position=holder.adapterPosition
+                leftText.text = "item$position"
+                desText.text = "这是第$position 段描述"
             }
         }
         override fun onBindView(view: DemoView, item: String) {

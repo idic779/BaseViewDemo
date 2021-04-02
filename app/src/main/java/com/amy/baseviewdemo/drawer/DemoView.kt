@@ -23,7 +23,7 @@ class DemoView(context: Context) : BaseViewGroup(context) {
     val leftText = AppCompatTextView(context).apply {
         layoutParams = LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
             it.leftMargin = 19.dp
-            it.rightMargin = 12.dp
+            it.rightMargin = 19.dp
             it.bottomMargin = 10.dp
             it.topMargin = 10.dp
         }
@@ -31,6 +31,15 @@ class DemoView(context: Context) : BaseViewGroup(context) {
         setTextColor(ContextCompat.getColor(context, R.color.white))
         setPadding(9.dp, 3.dp, 9.dp, 3.dp)
         background = ContextCompat.getDrawable(context, R.drawable.shape_radius12)
+        addView(this)
+    }
+    val desText = AppCompatTextView(context).apply {
+        layoutParams = LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
+            it.leftMargin = 3.dp
+            it.rightMargin = 3.dp
+        }
+        setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+        setTextColor(ContextCompat.getColor(context, R.color.teal_200))
         addView(this)
     }
     val icon = AppCompatImageView(context).apply {
@@ -43,15 +52,17 @@ class DemoView(context: Context) : BaseViewGroup(context) {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         leftText.autoMeasure()
+        desText.autoMeasure()
         icon.autoMeasure()
-        val height = leftText.measuredHeightWithMargins + paddingTop + paddingBottom +
-                icon.measuredHeight
-        val width = leftText.measuredWidthWithMargins.coerceAtLeast(icon.measuredWidth)
+        val height = paddingTop + paddingBottom +leftText.measuredHeightWithMargins+desText.measuredHeight+icon.measuredHeight
+        val width = desText.measuredWidthWithMargins.coerceAtLeast(
+                leftText.measuredWidthWithMargins.coerceAtLeast(icon.measuredWidth))
         setMeasuredDimension(width, height)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        leftText.layout(leftText.marginLeft, leftText.marginTop)
-        icon.layout(leftText.left, leftText.bottom + leftText.marginBottom)
+        leftText.layout(leftText.toHorizontalCenter(this), leftText.marginTop)
+        desText.layout(desText.marginLeft, leftText.bottom+ leftText.marginBottom)
+        icon.layout(leftText.left, desText.bottom )
     }
 }
